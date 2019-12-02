@@ -35,6 +35,19 @@ export default class Expenses extends Component {
         }
 
     }
+    async remove(id){
+        await fetch(`/api/expenses/${id}`,{
+            method:'DELETE',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json'
+            }
+        }).then(()=>{
+            let updatedExpenses=[...this.state.Expenses].filter(i=>i.id !==id);
+            this.setState({Expenses:updatedExpenses})
+        })
+
+    }
 
     async componentDidMount(){
         const response= await fetch('/api/catagories');
@@ -77,8 +90,9 @@ export default class Expenses extends Component {
                 <td>{expense.descript}</td>
                 <td>{expense.location}</td>
                 <td>{expense.expensedate}</td>
+                
                 <td>{expense.catagory.name}</td>
-                <td><Button size="sm" color="dangar" onClick={()=>this.remove(expense.id)}/></td>
+                <td><Button size="sm" color="danger" onClick={()=>this.remove(expense.id)}>Delete</Button></td>
             </tr>
            )
 
@@ -135,6 +149,7 @@ export default class Expenses extends Component {
                         <tr>
                             <th width="20%">Description</th>
                             <th width="10%">Location</th>
+                            <th>Date</th>
                             <th >Catagory</th>
                             <th width="10%">Action</th>
                         </tr>
